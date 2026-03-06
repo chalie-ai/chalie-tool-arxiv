@@ -1,0 +1,77 @@
+{
+  "name": "arxiv",
+  "version": "1.0",
+  "description": "Search arXiv for academic papers in CS, physics, math, and more. No API key required.",
+  "documentation": "Searches arXiv for academic papers using the official arXiv API. Covers computer science (AI, ML, systems, crypto, NLP), physics, mathematics, statistics, biology, economics, and more. Use for 'latest research on X', 'papers about Y technique', 'what does the literature say about Z'. Returns titles, authors, abstracts, categories, and links to both the abstract page and PDF. Respects arXiv's polite rate limit of 1 request per 3 seconds. Optionally filter by category (e.g., 'cs.AI', 'cs.LG', 'physics', 'math'). Pair with web_read to fetch the HTML version of papers (available at arxiv.org/html/{id}).",
+  "category": "research",
+  "icon": "fa-graduation-cap",
+  "trigger": {
+    "type": "on_demand",
+    "description": "Initiated by Chalie when academic papers or research findings are needed"
+  },
+
+  "parameters": {
+    "query": {
+      "type": "string",
+      "required": true,
+      "description": "Search query (e.g., 'transformer attention mechanism', 'quantum error correction', 'diffusion models image generation')"
+    },
+    "limit": {
+      "type": "integer",
+      "required": false,
+      "default": 5,
+      "description": "Number of papers to return (1-8). Capped at 8."
+    },
+    "sort": {
+      "type": "string",
+      "required": false,
+      "default": "relevance",
+      "description": "Sort order: 'relevance' (default), 'submitted' (newest first), 'updated' (recently updated first)."
+    },
+    "category": {
+      "type": "string",
+      "required": false,
+      "description": "arXiv category filter (e.g., 'cs.AI', 'cs.LG', 'cs.CL', 'physics', 'math', 'stat.ML'). Omit to search all categories."
+    }
+  },
+
+  "returns": {
+    "results": {
+      "type": "array",
+      "description": "List of {title, authors, abstract, url, pdf_url, published, updated, categories, primary_category}"
+    },
+    "count": {
+      "type": "integer",
+      "description": "Number of papers returned"
+    },
+    "_meta": {
+      "type": "object",
+      "description": "Observability: fetch_latency_ms, sort_mode, category_filter, result_count"
+    }
+  },
+
+  "constraints": {
+    "timeout_seconds": 12
+  },
+
+  "config_schema": {},
+
+  "tips": [
+    "Use category='cs.AI' or 'cs.LG' to narrow to AI/ML papers",
+    "Use sort='submitted' for the most recent papers on a topic",
+    "The pdf_url field links directly to the PDF — note this for the user",
+    "HTML versions often available at arxiv.org/html/{paper_id} — use web_read to fetch",
+    "Authors are limited to first 3 + 'et al.' in display; full list in the authors field"
+  ],
+
+  "output": {
+    "synthesize": true,
+    "card": {
+      "enabled": true,
+      "mode": "immediate",
+      "title": "arXiv",
+      "accent_color": "#B31B1B",
+      "background_color": "rgba(179,27,27,0.06)"
+    }
+  }
+}
