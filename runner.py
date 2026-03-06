@@ -230,22 +230,31 @@ def _format_text(results: list, query: str) -> str:
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
-payload = json.loads(base64.b64decode(sys.argv[1]))
-params = payload.get("params", {})
-settings = payload.get("settings", {})
-telemetry = payload.get("telemetry", {})
+try:
+    payload = json.loads(base64.b64decode(sys.argv[1]))
+    params = payload.get("params", {})
+    settings = payload.get("settings", {})
+    telemetry = payload.get("telemetry", {})
 
-result = execute(topic="", params=params, config=settings, telemetry=telemetry)
-results = result.get("results", [])
+    result = execute(topic="", params=params, config=settings, telemetry=telemetry)
+    results = result.get("results", [])
 
-output = {
-    "results": results,
-    "count": result.get("count", 0),
-    "text": _format_text(results, params.get("query", "")),
-    "html": _render_html(results) if results else None,
-    "_meta": result.get("_meta", {}),
-}
-if "error" in result:
-    output["error"] = result["error"]
+    output = {
+        "results": results,
+        "count": result.get("count", 0),
+        "text": _format_text(results, params.get("query", "")),
+        "html": _render_html(results) if results else None,
+        "_meta": result.get("_meta", {}),
+    }
+    if "error" in result:
+        output["error"] = result["error"]
 
-print(json.dumps(output))
+    print(json.dumps(output))
+except Exception as _e:
+    print(json.dumps({
+        "results": [], "count": 0,
+        "error": f"Runner error: {str(_e)[:200]}",
+        "text": f"arXiv search failed: {str(_e)[:200]}",
+        "html": None, "_meta": {},
+    }), file=sys.stdout)
+    print(f"[arxiv runner] Unhandled exception: {_e}", file=sys.stderr)
