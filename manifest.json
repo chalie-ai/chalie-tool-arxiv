@@ -51,7 +51,7 @@
   },
 
   "constraints": {
-    "timeout_seconds": 12
+    "timeout_seconds": 30
   },
 
   "config_schema": {},

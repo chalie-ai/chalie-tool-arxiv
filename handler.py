@@ -122,7 +122,7 @@ def _search_arxiv(query: str, limit: int, sort_by: str, category: str) -> tuple:
         resp = requests.get(
             _ARXIV_API,
             params=api_params,
-            timeout=10,
+            timeout=25,
             headers={"User-Agent": "Chalie/1.0"},
         )
         resp.raise_for_status()
