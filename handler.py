@@ -113,9 +113,11 @@ def _search_arxiv(query: str, limit: int, sort_by: str, category: str) -> tuple:
         "search_query": search_query,
         "start": 0,
         "max_results": limit,
-        "sortBy": sort_by,
-        "sortOrder": "descending",
     }
+    # 'relevance' is arXiv's default behavior — sending it as sortBy is invalid
+    if sort_by != "relevance":
+        api_params["sortBy"] = sort_by
+        api_params["sortOrder"] = "descending"
 
     try:
         _last_call = time.time()
